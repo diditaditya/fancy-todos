@@ -24,25 +24,7 @@ router.delete('/todos/:id', todoControl.delete);
 
 router.put('/user/:id', userControl.update);
 
-// router.get('/auth/facebook', (req, res) => {
-//   let url = 'https://www.facebook.com/v2.9/dialog/oauth?';
-//   url += 'client_id='+process.env.FACEBOOK_APP_ID;
-//   url += '&response_type='+'token';
-//   url += '&scope='+'email';
-//   url += '&redirect_uri='+'http://localhost:3000/auth/facebook/callback';
-//   res.redirect(url);
-// });
-//
-// router.get('/auth/facebook/callback', passport.authenticate('facebook', {session: false, failureRedirect: '/'}),
-//   function(req, res) {
-//     // console.log(req);
-//     res.send(req);
-//   }
-// );
-
-// https://www.facebook.com/v2.9/dialog/oauth?client_id=435613266793416&redirect_uri=http://localhost:3000/auth/facebook/callback
-
-// This works, however it logs you in with my freakin fb account -.-
+// This works, however the cors thingy does not work when this is called from client side
 router.get('/auth/facebook', passport.authenticate('facebook', {session: false}));
 router.get('/auth/facebook/callback', passport.authenticate('facebook', {session: false, failureRedirect: 'http://localhost:8080/login.html'}),
   function(req, res) {

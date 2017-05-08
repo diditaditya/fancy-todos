@@ -6,39 +6,6 @@ const bcrypt = require('bcrypt');
 let saltRounds = 8;
 const jwt = require('jsonwebtoken');
 
-// passport.use('local-signup', new LocalStrategy(
-//   function(username, email, password, done) {
-//     console.log('username: ', username);
-//     console.log('email: ', email);
-//     console.log('password: ', password);
-//     User.findOne({'local.username': username}, function(err, user) {
-//       if(err) {
-//         return done(err);
-//       }
-//       if(user) {
-//         return done(null, {message: 'username is already taken'})
-//       } else {
-//         let newUser = new User();
-//         newUser.local.username = username;
-//         newUser.local.email = email;
-//         console.log(password);
-//         bcrypt.hash(password, saltRounds, function(err, hashed) {
-//           if(err) {
-//             return done(err);
-//           }
-//           newUser.local.password = hashed;
-//           newUser.save((err) => {
-//             if(err) {
-//               throw err;
-//             }
-//             return done(null, newUser);
-//           });
-//         });
-//       }
-//     });
-//   }
-// ));
-
 passport.use('local-signin', new LocalStrategy(
   function(username, password, done) {
     User.findOne({'local.username': username}, function(err, user) {
@@ -103,38 +70,5 @@ passport.use(new FacebookStrategy({
     })
   }
 ));
-
-// passport.use(new FacebookStrategy({
-//   clientID: process.env.FACEBOOK_APP_ID,
-//   clientSecret: process.env.FACEBOOK_APP_SECRET,
-//   callbackURL: "http://localhost:3000/auth/facebook/callback",
-//   profileFields: ['id', 'email', 'first_name', 'last_name']
-// },
-// function(token, refreshToken, profile, done) {
-//   process.nextTick(function() {
-//     User.findOne({'facebook.id': profile.id}, function(err, user) {
-//       if(err) {
-//         return done(err);
-//       }
-//       if(user){
-//         return done(null, user);
-//       } else {
-//         let newUser = new User();
-//         newUser.facebook.id = profile.id;
-//         newUser.facebook.token = token;
-//         newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
-//         newUser.facebook.email = (profile.emails[0].value || '').toLowerCase();
-//         newUser.save(function(err) {
-//           if(err) {
-//             throw err;
-//           } else {
-//             return done(null, newUser);
-//           }
-//         });
-//       }
-//     })
-//   });
-// }
-// ));
 
 module.exports = passport;

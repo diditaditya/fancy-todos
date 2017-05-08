@@ -120,10 +120,11 @@ let userControl = {
     });
   },
   register: function(req, res) {
-    if(req.message) {
+    if(req.status === 'failed') {
       console.log(req.message);
+      res.send({status: req.status, message: req.message});
     } else {
-      res.send('User has been succesfully registered');
+      res.send({status: req.status, message: req.message, user: req.user});
     }
   },
   localSignin: function(req, res) {

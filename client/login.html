@@ -36,12 +36,25 @@
         <div class="form-group">
           <input class="form-control" type="text" placeholder="username" v-model="username" style="margin-bottom: 5px">
           <input class="form-control" type="password" placeholder="password" v-model="password" style="margin-bottom: 5px">
+          <p style="color: Red">{{ message }}</p>
           <button v-on:click="login" class="btn btn-primary">Sign in</button>
+          <p style="margin-top: 5px">Doesn't have an account? <span v-on:click="openRegForm" class="btn-link">register</span></p>
+        </div>
+      </div>
+      <div class="col-md-2"></div>
+      <div v-if="regFormStatus === true" class="col-md-4">
+        <h1>Register</h1>
+        <h3>Create new to-do(s) account</h3>
+        <div class="form-group">
+          <input class="form-control" type="text" placeholder="username" v-model="newUsername" style="margin-bottom: 5px">
+          <input class="form-control" type="text" placeholder="email" v-model="newEmail" style="margin-bottom: 5px">
+          <input class="form-control" type="password" placeholder="password" v-model="newPassword" style="margin-bottom: 5px">
+          <button v-on:click="register" class="btn btn-primary">Create New Account</button>
+          <button v-on:click="closeRegForm" class="btn btn-primary">Close</button>
         </div>
         <p>{{ message }}</p>
       </div>
-      <!-- <h3>Sign in using Facebook account</h3>
-      <button class="btn-facebook" v-on:click="facebookLogin">Facebook Sign in</button> -->
+
     </div>
 
   </div>

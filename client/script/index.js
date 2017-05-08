@@ -107,8 +107,6 @@ const index = new Vue({
         let url = 'http://localhost:3000/todos/';
         url += self.todos[index]._id;
 
-        self.todos.splice(index,1);
-
         let todoIds = [];
         self.todos.map(function(todo) {
           todoIds.push(todo._id);
@@ -121,6 +119,7 @@ const index = new Vue({
           axios.put(url, {todos: todoIds})
             .then(function(res) {
               console.log(res);
+              self.todos.splice(index,1);
               self.fetchUserData();
               self.message = 'Task has been successfully deleted';
             })

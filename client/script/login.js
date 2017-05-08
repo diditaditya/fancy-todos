@@ -1,6 +1,10 @@
 new Vue({
   el:"#login",
   data: {
+    regFormStatus: false,
+    newUsername: '',
+    newEmail: '',
+    newPassword: '',
     message: '',
     username: '',
     password: '',
@@ -14,6 +18,35 @@ new Vue({
       } else {
         this.name = '';
       }
+    },
+    openRegForm: function() {
+      this.regFormStatus = true;
+    },
+    closeRegForm: function() {
+      this.regFormStatus = false;
+    },
+    register: function() {
+
+      let self = this;
+
+      let body = {
+        username: this.newUsername,
+        email: this.newEmail,
+        password: this.newPassword
+      }
+
+      let url = 'http://localhost:3000/localSignup';
+
+      axios.post(url, body)
+        .then(function(response) {
+          console.log(response);
+          self.regFormStatus = false;
+          self.message = 'Your are successfully registered, please sign in with your account';
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+
     },
     goHome: function() {
       window.location.href="index.html";

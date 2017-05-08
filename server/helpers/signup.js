@@ -12,24 +12,30 @@ let signupHelper = function(req, res, next) {
   let password = req.body.password;
   User.findOne({'local.username': username}, function(err, user) {
     if(err) {
+      req.status = 'failed';
       return next(err);
     }
     if(user) {
-      let message = 'username is already taken';
-      next({'message': message});
+      req.status = 'failed';
+      req.message = 'username is already taken'
+      next();
     } else {
       let newUser = new User();
       newUser.local.username = username;
       newUser.local.email = email;
       bcrypt.hash(password, saltRounds, function(err, hashed) {
         if(err) {
+          req.status = 'failed';
           next(err);
         }
         newUser.local.password = hashed;
         newUser.save((err) => {
           if(err) {
+            req.status = 'failed';
             throw err;
           }
+          req.status = 'success';
+          req.user = newUser;
           next();
         });
       });
