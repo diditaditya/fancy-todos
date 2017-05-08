@@ -16,7 +16,7 @@
       <nav class="navbar navbar-light bg-primary">
         <div class="" style="padding: 5px 25px 5px 25px;">
           <h4 class="text-left navbar-brand">to-do(s)</h4>
-          <h4 class="text-right text-capitalize">{{user.name}} <button class="btn btn-warning" v-on:click="logout" style="margin-left: 5px">Log out</button></h4>
+          <h4 class="text-right text-capitalize">{{user.name}} <button class="btn btn-warning" v-on:click="logout" style="margin-left: 5px" onclick="facebookLogOut()">Log out</button></h4>
         </div>
       </nav>
     </header>
@@ -26,8 +26,8 @@
         <h1 class="text-capitalize">{{ greeting }}</h1>
         <h3>{{ todosOverview }}</h3>
         <button v-if="addFormStatus === false"  v-on:click="openAddForm" class="btn btn-primary" style="margin-top: 10px">Add new task</button>
-        <div v-if="addFormStatus === true" class="row container">
-          <div class="form-group col-md-6" style="margin-top: 10px">
+        <div class="row container">
+          <div v-if="addFormStatus === true" class="form-group col-md-6" style="margin-top: 10px">
             <label for="newTaskTitle">Title</label>
             <input v-model="newTodo.title" name="newTaskTitle" type="text" class="form-control" placeholder="Title">
             <label for="newTaskDesc">Description</label>
@@ -50,7 +50,7 @@
         <tr class="bg-success">
           <th class="text-center" style="min-width: 100px">No</th>
           <th class="text-center">
-            Title
+            To Do
             <div style="float: right">
               <span v-on:click="titleSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent"></span>
               <span v-on:click="titleSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent"></span>
@@ -81,6 +81,7 @@
           </th>
           <th></th>
           <th></th>
+          <th></th>
         </tr>
         <tr v-for="(todo, index) in todos" v-if="todo.isDeleted === false">
           <td class="text-center">{{index +1}}</td>
@@ -98,9 +99,27 @@
           </td>
           <td><p v-if="todo.completedDate !== null" class="text-center">{{convertDate(todo.completedDate)}}</p></td>
           <td><button v-if="todo.isCompleted === false" v-on:click="complete(index)" class="btn btn-success">Done!</button></td>
+          <td><button v-on:click="openEditForm(index)" class="btn btn-warning">Edit</button></td>
           <td><button v-on:click="deleteTask(index)" class="btn btn-danger">Delete</button></td>
         </tr>
       </table>
+
+      <div class="row container" id="editForm">
+        <div v-if="editFormStatus === true" class="form-group col-md-6" style="margin-top: 10px">
+          <h4>Edit the selected to do</h4>
+          <label for="newTaskTitle">Title</label>
+          <input v-model="editedTodo.title" name="newTaskTitle" type="text" class="form-control" placeholder="Title">
+          <label for="newTaskDesc">Description</label>
+          <textarea v-model="editedTodo.content" name="newTaskDesc" type="text" class="form-control" placeholder="Description"></textarea>
+          <label for="newTaskDue">Due Date</label>
+          <input v-model="editedTodo.dueDate" name="newTaskDue" type="date" class="form-control" :value="editedTodo.dueDate">
+          <div style="margin-top: 15px">
+            <button v-on:click="editTask(editedTodo.index)" class="btn btn-primary" type="submit">Edit Task</button>
+            <button v-on:click="closeEditForm" class="btn btn-primary" type="cancel">Close</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="container">
@@ -115,6 +134,7 @@
 
 </body>
 
+<script src="./script/facebook.js"></script>
 <script src="./script/index.js"></script>
 
 </html>

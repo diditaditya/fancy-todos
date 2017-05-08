@@ -57,3 +57,13 @@ window.fbAsyncInit = function() {
         'into this app.';
     }
   }
+
+  function facebookLogOut() {
+    if(localStorage.getItem('login_method') === 'facebook') {
+      if(confirm('Log out from Facebook as well?')) {
+        FB.logout(function(response) {
+          console.log(response);
+        });
+      }
+    }
+  }

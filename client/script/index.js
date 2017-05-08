@@ -8,7 +8,9 @@ const index = new Vue({
     newTodo: {},
     user: '',
     todos: [],
-    notDeletedTodo: []
+    notDeletedTodo: [],
+    editFormStatus: false,
+    editedTodo : {}
   },
   methods: {
     tokenCheck: function() {
@@ -160,6 +162,7 @@ const index = new Vue({
               console.log(res);
               self.fetchUserData();
               self.message = 'Task has been successfully added';
+              self.closeAddForm();
             })
             .catch(function(err) {
               console.log(err);
@@ -212,6 +215,48 @@ const index = new Vue({
         .catch((err) => {
           console.log(err);
         });
+    },
+    openEditForm: function(index) {
+      this.editedTodo.index = index;
+      this.editedTodo.isCompleted = this.todos[index].isCompleted;
+      this.editedTodo.title = this.todos[index].title;
+      this.editedTodo.content = this.todos[index].content;
+      if(this.todos[index].dueDate !== null) {
+        this.editedTodo.dueDate = this.convertDate(new Date(this.todos[index].dueDate));
+      }
+      this.editFormStatus = true;
+    },
+    closeEditForm: function() {
+      this.editFormStatus = false;
+    },
+    editTask: function(index) {
+
+      let self = this;
+      let url = 'http://localhost:3000/todos/';
+      url += this.todos[index]._id;
+
+      let body = {
+        isCompleted: this.editedTodo.isCompleted,
+        title: this.editedTodo.title,
+        content: this.editedTodo.content,
+        completedDate: this.todos[index].completedDate,
+        createdDate: this.todos[index].createdDate
+      };
+
+      if(this.editedTodo.dueDate !== null) {
+        body.dueDate = new Date(this.editedTodo.dueDate);
+      }
+
+      axios.put(url, body)
+        .then(function(response) {
+          console.log(response);
+          self.closeEditForm();
+          self.fetchUserData();
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+
     },
     createShowToggle: function() {
       this.todos.map(function(todo) {

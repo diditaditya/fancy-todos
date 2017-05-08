@@ -72,7 +72,12 @@ let todoControl = {
         } else {
           dueDate = new Date(req.body.dueDate);
         }
-        let completedDate = new Date(req.body.completedDate) || todo.completedDate;
+        let completedDate;
+        if(req.body.completedDate === null) {
+          completedDate = null;
+        } else {
+          completedDate = new Date(req.body.completedDate);
+        }
         let isCompleted = req.body.isCompleted || todo.isCompleted;
         let isDeleted = req.body.isDeleted || todo.isDeleted;
         let tags = req.body.tags || todo.tags;
