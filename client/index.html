@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <title>Dashboard</title>
+</head>
+<body>
+
+  <div id="index">
+    <header>
+      <nav class="navbar navbar-light bg-primary">
+        <div class="" style="padding: 5px 25px 5px 25px;">
+          <h4 class="text-left navbar-brand">to-do(s)</h4>
+          <h4 class="text-right text-capitalize">{{user.name}} <button class="btn btn-warning" v-on:click="logout" style="margin-left: 5px">Log out</button></h4>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container" style="margin-bottom: 50px">
+      <div>
+        <h1 class="text-capitalize">{{ greeting }}</h1>
+        <h3>{{ todosOverview }}</h3>
+        <button v-if="addFormStatus === false"  v-on:click="openAddForm" class="btn btn-primary" style="margin-top: 10px">Add new task</button>
+        <div v-if="addFormStatus === true" class="row container">
+          <div class="form-group col-md-6" style="margin-top: 10px">
+            <label for="newTaskTitle">Title</label>
+            <input v-model="newTodo.title" name="newTaskTitle" type="text" class="form-control" placeholder="Title">
+            <label for="newTaskDesc">Description</label>
+            <textarea v-model="newTodo.content" name="newTaskDesc" type="text" class="form-control" placeholder="Description"></textarea>
+            <label for="newTaskDue">Due Date</label>
+            <input v-model="newTodo.dueDate" name="newTaskDue" type="date" class="form-control">
+            <div style="margin-top: 15px">
+              <button v-on:click="addTask" class="btn btn-primary" type="submit">Add Task</button>
+              <button v-on:click="closeAddForm" class="btn btn-primary" type="cancel">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div v-if="todos.length > 0" class="container">
+      <table class="table">
+        <tr class="bg-success">
+          <th class="text-center" style="min-width: 100px">No</th>
+          <th class="text-center">
+            Title
+            <div style="float: right">
+              <span v-on:click="titleSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent"></span>
+              <span v-on:click="titleSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent"></span>
+            </div>
+          </th>
+          <!-- <th></th> -->
+          <th class="text-center" style="min-width: 150px">
+            Created at
+            <div style="float: right">
+              <span v-on:click="createdAtSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent"></span>
+              <span v-on:click="createdAtSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent"></span>
+            </div>
+          </th>
+          <th class="text-center" style="min-width: 150px">
+            Due Date
+            <div style="float: right">
+              <span v-on:click="dueDateSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent"></span>
+              <span v-on:click="dueDateSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent"></span>
+            </div>
+          </th>
+          <th class="text-center" style="min-width: 75px">Status</th>
+          <th class="text-center" style="min-width: 160px">
+            Completed at
+            <div style="float: right">
+              <span v-on:click="completedAtSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent"></span>
+              <span v-on:click="completedAtSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent"></span>
+            </div>
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr v-for="(todo, index) in todos" v-if="todo.isDeleted === false">
+          <td class="text-center">{{index +1}}</td>
+          <td class="text-center">
+            <p class="text-capitalize"><b>{{todo.title}}</b></p>
+            <p>{{ todo.content }}</p>
+          </td>
+          <td class="text-center">{{convertDate(todo.createdDate)}}</td>
+          <td>
+            <p v-if="todo.dueDate !== null" class="text-center">{{convertDate(todo.dueDate)}}</p>
+            <p v-else class="text-center">Indefinite</p>
+          </td>
+          <td>
+            <p v-if="todo.isCompleted === true" class="text-center">done! <span v-if="todo.isCompleted === true" class="glyphicon glyphicon-ok" style="margin: 0 auto"></span></p>
+          </td>
+          <td><p v-if="todo.completedDate !== null" class="text-center">{{convertDate(todo.completedDate)}}</p></td>
+          <td><button v-if="todo.isCompleted === false" v-on:click="complete(index)" class="btn btn-success">Done!</button></td>
+          <td><button v-on:click="deleteTask(index)" class="btn btn-danger">Delete</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="container">
+      <h4>{{ message }} </h4>
+    </div>
+
+
+    <div>
+    </div>
+
+  </div>
+
+</body>
+
+<script src="./script/index.js"></script>
+
+</html>

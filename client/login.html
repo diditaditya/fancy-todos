@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdn.auth0.com/js/lock/10.15/lock.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <title>Sign In</title>
+</head>
+<body>
+
+  <div id="login">
+
+    <header>
+      <nav class="navbar navbar-light bg-primary">
+        <div class="" style="padding: 5px 25px 5px 25px">
+          <h4 class="text-left navbar-brand">to-do(s)</h4>
+          <div v-if="name.length > 0">
+            <h4 class="text-right text-capitalize">
+              {{ name }}
+              <button class="btn btn-warning" v-on:click="goHome" style="margin-left: 5px">Dashboard</button>
+              <button class="btn btn-warning" v-on:click="logout" style="margin-left: 5px">Log out</button>
+            </h4>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="col-md-4">
+        <h1>Welcome</h1>
+        <h3>Sign in with to-do(s) account</h3>
+        <div class="form-group">
+          <input class="form-control" type="text" placeholder="username" v-model="username" style="margin-bottom: 5px">
+          <input class="form-control" type="password" placeholder="password" v-model="password" style="margin-bottom: 5px">
+          <button v-on:click="login" class="btn btn-primary">Sign in</button>
+        </div>
+        <p>{{ message }}</p>
+      </div>
+      <!-- <h3>Sign in using Facebook account</h3>
+      <button class="btn-facebook" v-on:click="facebookLogin">Facebook Sign in</button> -->
+    </div>
+
+  </div>
+
+  <div class="container">
+    <div class="col-md-4">
+      <h3>Sign in with Facebook account</h3>
+      <fb:login-button scope="email, public_profile" onlogin="checkLoginState();"></fb:login-button>
+    </div>
+  </div>
+
+
+
+
+<div id="status">
+</div>
+
+</body>
+
+<script src="./script/login.js"></script>
+
+<script src="./script/facebook.js"></script>
+
+
+</html>
