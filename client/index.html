@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/style.css">
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <title>Dashboard</title>
@@ -34,16 +35,21 @@
             <textarea v-model="newTodo.content" name="newTaskDesc" type="text" class="form-control" placeholder="Description"></textarea>
             <label for="newTaskDue">Due Date</label>
             <input v-model="newTodo.dueDate" name="newTaskDue" type="date" class="form-control">
+            <label for="newTaskDueTime">Due Time</label>
+            <input v-model="newTodo.dueTime" name="newTaskDueTime" type="time" class="form-control">
             <div style="margin-top: 15px">
               <button v-on:click="addTask" class="btn btn-primary" type="submit">Add Task</button>
               <button v-on:click="closeAddForm" class="btn btn-primary" type="cancel">Close</button>
             </div>
           </div>
         </div>
+        <!-- <button v-if="addFormStatus === false"  v-on:click="openAddForm" class="btn btn-success" style="margin-top: 10px">Go to Your Routine <span class="glyphicon glyphicon-chevron-right"></span></button> -->
       </div>
     </div>
 
-
+    <div class="container">
+      <h4>{{ message }} </h4>
+    </div>
 
     <div v-if="todos.length > 0" class="container">
       <table class="table">
@@ -52,31 +58,31 @@
           <th class="text-center">
             To Do
             <div style="float: right">
-              <span v-on:click="titleSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent; cursor: pointer"></span>
-              <span v-on:click="titleSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent; cursor: pointer"></span>
+              <span v-on:click="titleSortAsc" class="glyphicon glyphicon-chevron-down sortButton"></span>
+              <span v-on:click="titleSortDesc" class="glyphicon glyphicon-chevron-up sortButton"></span>
             </div>
           </th>
           <!-- <th></th> -->
           <th class="text-center" style="min-width: 150px">
             Created at
             <div style="float: right">
-              <span v-on:click="createdAtSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent; cursor: pointer"></span>
-              <span v-on:click="createdAtSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent; cursor: pointer"></span>
+              <span v-on:click="createdAtSortAsc" class="glyphicon glyphicon-chevron-down sortButton"></span>
+              <span v-on:click="createdAtSortDesc" class="glyphicon glyphicon-chevron-up sortButton"></span>
             </div>
           </th>
           <th class="text-center" style="min-width: 150px">
             Due Date
             <div style="float: right">
-              <span v-on:click="dueDateSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent; cursor: pointer"></span>
-              <span v-on:click="dueDateSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent; cursor: pointer"></span>
+              <span v-on:click="dueDateSortAsc" class="glyphicon glyphicon-chevron-down sortButton"></span>
+              <span v-on:click="dueDateSortDesc" class="glyphicon glyphicon-chevron-up sortButton"></span>
             </div>
           </th>
           <th class="text-center" style="min-width: 75px">Status</th>
           <th class="text-center" style="min-width: 160px">
             Completed at
             <div style="float: right">
-              <span v-on:click="completedAtSortAsc" class="glyphicon glyphicon-chevron-down" style="border: none; background-color: transparent; cursor: pointer"></span>
-              <span v-on:click="completedAtSortDesc" class="glyphicon glyphicon-chevron-up" style="border: none; background-color: transparent; cursor: pointer"></span>
+              <span v-on:click="completedAtSortAsc" class="glyphicon glyphicon-chevron-down sortButton"></span>
+              <span v-on:click="completedAtSortDesc" class="glyphicon glyphicon-chevron-up sortButton"></span>
             </div>
           </th>
           <th></th>
@@ -90,9 +96,10 @@
             <p>{{ todo.content }}</p>
           </td>
           <td class="text-center">{{convertDate(todo.createdDate)}}</td>
-          <td>
-            <p v-if="todo.dueDate !== null" class="text-center">{{convertDate(todo.dueDate)}}</p>
-            <p v-else class="text-center">Indefinite</p>
+          <td class="text-center">
+            <p v-if="todo.dueDate !== null">{{convertDate(todo.dueDate)}}</p>
+            <p v-else>Indefinite</p>
+            <p v-if="todo.dueDate !== null">{{ convertTime(todo.dueDate)}}</p>
           </td>
           <td>
             <p v-if="todo.isCompleted === true" class="text-center">done! <span v-if="todo.isCompleted === true" class="glyphicon glyphicon-ok" style="margin: 0 auto"></span></p>
@@ -121,11 +128,6 @@
       </div>
 
     </div>
-
-    <div class="container">
-      <h4>{{ message }} </h4>
-    </div>
-
 
     <div>
     </div>

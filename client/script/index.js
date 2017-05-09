@@ -59,6 +59,18 @@ const index = new Vue({
       }
       return `${year}-${month}-${date}`;
     },
+    convertTime: function(oriDate) {
+      let fullDate = new Date(oriDate);
+      let hour = String(fullDate.getHours());
+      if(hour.length === 1) {
+        hour = '0' + hour;
+      }
+      let minute = String(fullDate.getMinutes());
+      if(minute.length === 1) {
+        minute = '0' + minute;
+      }
+      return `${hour}:${minute}`;
+    },
     outstandingCheck: function() {
       let outstanding = this.todos.filter(function(todo) {
         return todo.isCompleted === false;
@@ -143,33 +155,51 @@ const index = new Vue({
     },
     addTask: function() {
       let self = this;
-      this.newTodo.userId = this.user.userId;
-      let body = this.newTodo;
-      console.log(body);
-      if(body.title) {
-        let url = 'http://localhost:3000/todos';
-        axios.post(url, body).then(function(response) {
-          let todoIds = [];
-          self.todos.map(function(todo) {
-            todoIds.push(todo._id);
-          });
-          todoIds.push(response.data._id);
-          let url = 'http://localhost:3000/user/';
-          url += self.user.userId;
-          axios.put(url, {todos: todoIds})
-            .then(function(res) {
-              console.log(res);
-              self.fetchUserData();
-              self.message = 'Task has been successfully added';
-              self.closeAddForm();
-            })
-            .catch(function(err) {
-              console.log(err);
-              self.message = 'Error occurs when updating the user data, task is not added';
+      let body = {
+        userId: this.user.userId,
+        title: this.newTodo.title,
+        content: this.newTodo.content
+      };
+
+      console.log('typeof dueTime', typeof this.newTodo.dueTime);
+      console.log('typeof dueDate', typeof this.newTodo.dueDate);
+
+      if((this.newTodo.dueTime.length === 0 && this.newTodo.dueDate.length > 0) || (this.newTodo.dueTime.length > 0 && this.newTodo.dueDate.length === 0)) {
+        console.log("caught on first if");
+        self.message = 'Due Date and Due Time must not be empty in order to receive notification';
+      } else {
+
+        if(this.newTodo.dueDate.length > 0 && this.newTodo.dueTime.length > 0) {
+          body.dueDate = new Date(`${this.newTodo.dueDate} ${this.newTodo.dueTime}:00`);
+        }
+
+        if(body.title) {
+          let url = 'http://localhost:3000/todos';
+          axios.post(url, body).then(function(response) {
+            let todoIds = [];
+            self.todos.map(function(todo) {
+              todoIds.push(todo._id);
             });
-        }).catch(function(err) {
-          console.log(err);
-        });
+            todoIds.push(response.data._id);
+            let url = 'http://localhost:3000/user/';
+            url += self.user.userId;
+            axios.put(url, {todos: todoIds})
+              .then(function(res) {
+                console.log(res);
+                self.fetchUserData();
+                self.message = 'Task has been successfully added';
+                self.closeAddForm();
+              })
+              .catch(function(err) {
+                console.log(err);
+                self.message = 'Error occurs when updating the user data, task is not added';
+              });
+          }).catch(function(err) {
+            console.log(err);
+          });
+        } else {
+          self.message = 'Title may not be empty';
+        }
       }
     },
     fetchUserData: function() {

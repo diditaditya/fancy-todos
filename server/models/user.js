@@ -6,6 +6,7 @@ let userSchema = new Schema({
     username: String,
     email: String,
     password: String,
+    phone: String
     // todos: [{type: Schema.Types.ObjectId, ref: 'Todo'}]
   },
   facebook: {

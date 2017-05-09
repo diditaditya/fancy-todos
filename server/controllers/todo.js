@@ -1,4 +1,6 @@
 const Todo = require('../models/todo');
+const User = require('../models/user');
+const CronJob = require('../background/bg-job')
 
 let todoControl = {
   showAll: (req, res) => {
@@ -38,10 +40,15 @@ let todoControl = {
         if (err) {
           res.send(err);
         } else {
-          res.send(todo);
-        }
+          User.findById(creator, (err, user) => {
+            if(err) {
+              res.send(err);
+            } else {
+              CronJob(user, todo);
+              res.send(todo);
+            }
+          });                  }
       });
-
     } else {
       let message = 'Title must not be empty'
       res.send({message: message});
